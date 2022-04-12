@@ -12,7 +12,7 @@ export default {
 	],
 	output: [
 		{
-			name: 'richtext-parse-to-unity-egret',
+			name: 'animate-canvas-lib',
 			file: pkg.browser,
 			format: 'umd',
 		},

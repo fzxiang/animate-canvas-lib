@@ -1,30 +1,30 @@
-# richtext-parse-to-unity-egret
+# animate-canvas-lib
 
 **中文** | [English](./README.en.md)
 
 ## 简介
 
-richtext-parse-to-unity-egret是一个工具库，用于web富文本转化为游戏引擎（unity、egret）支持的格式。
+animate-canvas-lib是一个工具库，用于web富文本转化为游戏引擎（unity、egret）支持的格式。
 同时转义对老牌的富文本编辑器做了初步兼容，推荐使用[wangEditor](https://github.com/wangeditor-team/wangEditor)开源的富文本编辑器V4或V5版本
 
 ## 使用方式
 - browser
   
 ``` HTML
-<script src="https://cdn.jsdelivr.net/npm/richtext-parse-to-unity-egret"></script>
+<script src="https://cdn.jsdelivr.net/npm/animate-canvas-lib"></script>
 <script>
-  const { parseUnity, parseEgret } = window['richtext-parse-to-unity-egret']
+  const { parseUnity, parseEgret } = window['animate-canvas-lib']
 </script>
 ```
 
 - node
 ``` bash
 $ npm i -g npm
-$ npm i richtext-parse-to-unity-egret
+$ npm i animate-canvas-lib
 ```
 ``` typescript
 // 引入两种转义方法
-const { parseUnity, parseEgret } = require('richtext-parse-to-unity-egret');
+const { parseUnity, parseEgret } = require('animate-canvas-lib');
 
 /***
  * @description 转义unity支持的富文本格式

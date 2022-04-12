@@ -1,30 +1,30 @@
-# richtext-parse-to-unity-egret
+# animate-canvas-lib
 
 [中文](./README.md) | **English**
 
 ## Introduction
 
-richtext-parse-to-unity-egret is a library of tools for converting web rich text into formats supported by game engines (unity, egret).
+animate-canvas-lib is a library of tools for converting web rich text into formats supported by game engines (unity, egret).
 Simple compatibility with older rich text editors，Recommend using [wangEditor](https://github.com/wangeditor-team/wangEditor) open source rich text editor V4 or V5 version
 
 ## Usage
 - browser
   
 ``` HTML
-<script src="https://cdn.jsdelivr.net/npm/richtext-parse-to-unity-egret"></script>
+<script src="https://cdn.jsdelivr.net/npm/animate-canvas-lib"></script>
 <script>
-  const { parseUnity, parseEgret } = window['richtext-parse-to-unity-egret']
+  const { parseUnity, parseEgret } = window['animate-canvas-lib']
 </script>
 ```
 
 - node
 ``` bash
 $ npm i -g npm
-$ npm i richtext-parse-to-unity-egret
+$ npm i animate-canvas-lib
 ```
 ``` typescript
 // require of two methods
-const { parseUnity, parseEgret } = require('richtext-parse-to-unity-egret');
+const { parseUnity, parseEgret } = require('animate-canvas-lib');
 
 /***
  * @description The following are used as unity example

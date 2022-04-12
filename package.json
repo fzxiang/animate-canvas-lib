@@ -1,16 +1,15 @@
 {
-  "name": "richtext-parse-to-unity-egret",
+  "name": "animate-canvas-lib",
   "version": "1.0.2",
-  "description": "网页富文本格式游戏unity、egret引擎支持的格式",
-  "main": "dist/richtext-parse-to-unity-egret.cjs.js",
-  "module": "dist/richtext-parse-to-unity-egret.esm.js",
-  "browser": "dist/richtext-parse-to-unity-egret.umd.js",
+  "description": "收集优秀的canvas动画库",
+  "main": "dist/animate-canvas-lib.cjs.js",
+  "module": "dist/animate-canvas-lib.esm.js",
+  "browser": "dist/animate-canvas-lib.umd.js",
   "scripts": {
     "serve": "serve -p 5100",
     "open": "open http://localhost:5100/demo/demo.html",
     "build": "rollup --config --sourcemap",
     "dev": "rollup --config --watch",
-    "test": "jest",
     "pretest": "npm run build",
     "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\""
   },
@@ -19,36 +18,31 @@
     "@rollup/plugin-commonjs": "^11.0.1",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "@rollup/plugin-typescript": "^8.3.1",
-    "@types/jest": "^27.4.1",
     "@types/node": "^17.0.22",
     "import-modules": "^3.1.0",
-    "jest": "^27.4.1",
     "lint-staged": "^12.3.7",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.6.0",
     "rollup": "^2.14.0",
     "serve": "^13.0.2",
-    "ts-jest": "^27.1.3",
     "ts-node": "^10.7.0",
     "tslib": "^2.3.1",
     "typescript": "^4.6.2"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fzxiang/richtext-parse-to-unity-egret.git"
+    "url": "git+https://github.com/fzxiang/animate-canvas-lib.git"
   },
   "files": [
     "dist"
   ],
   "keywords": [
-    "rich",
-    "text",
-    "unity",
-    "egret",
-    "code",
-    "format",
-    "富文本",
-    "游戏"
+    "canvas",
+    "animate",
+    "animation",
+    "background",
+    "three.js",
+    "动画背景"
   ],
   "gitHooks": {
     "pre-commit": "lint-staged"
@@ -65,7 +59,7 @@
   "author": "Alson",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/fzxiang/richtext-parse-to-unity-egret/issues"
+    "url": "https://github.com/fzxiang/animate-canvas-lib/issues"
   },
-  "homepage": "https://github.com/fzxiang/richtext-parse-to-unity-egret#readme"
+  "homepage": "https://github.com/fzxiang/animate-canvas-lib#readme"
 }
