@@ -1,4 +1,5 @@
 //THREEJS RELATED VARIABLES
+import THREE from 'three';
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane,
@@ -88,7 +89,8 @@ var PI = Math.PI;
 
 //INIT THREE JS, SCREEN AND MOUSE EVENTS
 
-function initScreenAnd3D() {
+function initScreenAnd3D(element) {
+    container = element
 
     HEIGHT = window.innerHeight;
     WIDTH = window.innerWidth;
@@ -124,7 +126,6 @@ function initScreenAnd3D() {
     renderer.setSize(WIDTH, HEIGHT);
     renderer.shadowMap.enabled = true;
 
-    container = document.getElementById('rabbit');
     container.appendChild(renderer.domElement);
 
     window.addEventListener('resize', handleWindowResize, false);
@@ -1245,24 +1246,6 @@ function render(){
     renderer.render(scene, camera);
 }
 
-window.addEventListener('load', init, false);
-
-function init(event){
-    initScreenAnd3D();
-    createLights();
-    createFloor()
-    createHero();
-    createMonster();
-    createFirs();
-    createCarrot();
-    createBonusParticles();
-    createObstacle();
-    initUI();
-    resetGame();
-    loop();
-
-    //setInterval(hero.blink.bind(hero), 3000);
-}
 
 function resetGame(){
     scene.add(hero.mesh);
@@ -1369,4 +1352,23 @@ Trunc = function(){
 
 
     this.mesh.castShadow = true;
+}
+
+
+
+export function render({element}){
+  initScreenAnd3D(element);
+  createLights();
+  createFloor()
+  createHero();
+  createMonster();
+  createFirs();
+  createCarrot();
+  createBonusParticles();
+  createObstacle();
+  initUI();
+  resetGame();
+  loop();
+
+  //setInterval(hero.blink.bind(hero), 3000);
 }

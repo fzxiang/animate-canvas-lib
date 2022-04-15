@@ -38,6 +38,7 @@
   },
   "include": [
     "src/**/*",
+    "demo/three.js",
   ],
   "exclude": [
     "node_modules",

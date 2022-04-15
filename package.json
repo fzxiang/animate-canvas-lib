@@ -1,6 +1,6 @@
 {
   "name": "animate-canvas-lib",
-  "version": "1.0.2",
+  "version": "0.0.1",
   "description": "收集优秀的canvas动画库",
   "main": "dist/animate-canvas-lib.cjs.js",
   "module": "dist/animate-canvas-lib.esm.js",
@@ -8,13 +8,13 @@
   "scripts": {
     "serve": "serve -p 5100",
     "open": "open http://localhost:5100/demo/demo.html",
-    "build": "rollup --config --sourcemap",
+    "build": "rollup --config",
     "dev": "rollup --config --watch",
     "pretest": "npm run build",
     "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\""
   },
   "dependencies": {
-    "three": "^0.139.2"
+    "three": "^0.86.0"
   },
   "devDependencies": {
     "@babel/types": "^7.17.0",
@@ -37,7 +37,7 @@
     "url": "git+https://github.com/fzxiang/animate-canvas-lib.git"
   },
   "files": [
-    "dist"
+    "src/"
   ],
   "keywords": [
     "canvas",
