@@ -1,0 +1,30 @@
+{
+  "name": "@animate-canvas-lib/plane",
+  "version": "0.0.2",
+  "description": "@animate-canvas-lib/plane",
+  "main": "index.js",
+  "module": "dist/plane.esm-boundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/plane.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fzxiang/animate-canvas-lib.git"
+  },
+  "keywords": [
+    "canvas",
+    "animate",
+    "animation",
+    "background",
+    "three.js",
+    "动画背景"
+  ],
+  "author": "Alson",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/fzxiang/animate-canvas-lib/issues"
+  },
+  "homepage": "https://github.com/fzxiang/animate-canvas-lib#readme"
+}
