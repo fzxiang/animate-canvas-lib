@@ -1,10 +1,16 @@
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 // import typescript from "@rollup/plugin-typescript";
-import pkg from './package.json';
 
 const DIR_DIST = "dist/animate-canvas-lib"
 
+const outputConfigs = {
+	'esm-bundler': {
+		file: 
+	}
+}
+// const defalutFormats
+// const packageConfigs = 
 export default {
 	input: './src/plane.js',
 	plugins:[
