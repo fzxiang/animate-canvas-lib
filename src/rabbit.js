@@ -163,7 +163,7 @@ function handleMouseDown(event){
 }
 
 function createLights() {
-    globalLight = new THREE.AmbientLight(0xffffff, .9);
+    const globalLight = new THREE.AmbientLight(0xffffff, .9);
 
     shadowLight = new THREE.DirectionalLight(0xffffff, 1);
     shadowLight.position.set(-30, 40, 20);
@@ -181,9 +181,10 @@ function createLights() {
 
 }
 
+let floor
 function createFloor() {
 
-    floorShadow = new THREE.Mesh(new THREE.SphereGeometry(floorRadius, 50, 50), new THREE.MeshPhongMaterial({
+    const floorShadow = new THREE.Mesh(new THREE.SphereGeometry(floorRadius, 50, 50), new THREE.MeshPhongMaterial({
         color: 0x7abf8e,
         specular:0x000000,
         shininess:1,
@@ -193,7 +194,7 @@ function createFloor() {
     //floorShadow.rotation.x = -Math.PI / 2;
     floorShadow.receiveShadow = true;
 
-    floorGrass = new THREE.Mesh(new THREE.SphereGeometry(floorRadius-.5, 50, 50), new THREE.MeshBasicMaterial({
+    const floorGrass = new THREE.Mesh(new THREE.SphereGeometry(floorRadius-.5, 50, 50), new THREE.MeshBasicMaterial({
         color: 0x7abf8e
     }));
     //floor.rotation.x = -Math.PI / 2;
@@ -208,7 +209,7 @@ function createFloor() {
 
 }
 
-Hero = function() {
+function Hero() {
     this.status = "running";
     this.runningCycle = 0;
     this.mesh = new THREE.Group();
@@ -365,7 +366,7 @@ Hero = function() {
     });
 }
 
-BonusParticles = function(){
+function BonusParticles(){
     this.mesh = new THREE.Group();
     var bigParticleGeom = new THREE.CubeGeometry(10,10,10,1);
     var smallParticleGeom = new THREE.CubeGeometry(5,5,5,1);
@@ -500,7 +501,7 @@ Hero.prototype.jump = function(){
 }
 
 
-Monster = function(){
+function Monster(){
 
     this.runningCycle = 0;
 
@@ -835,7 +836,7 @@ Monster.prototype.sit = function(){
 }
 
 
-Carrot = function() {
+function Carrot() {
     this.angle = 0;
     this.mesh = new THREE.Group();
 
@@ -875,7 +876,7 @@ Carrot = function() {
     });
 }
 
-Hedgehog = function() {
+function Hedgehog() {
     this.angle = 0;
     this.status="ready";
     this.mesh = new THREE.Group();
@@ -993,12 +994,14 @@ Hedgehog.prototype.nod = function(){
 
 
 function createHero() {
+    console.log('create hero')
     hero = new Hero();
     hero.mesh.rotation.y = Math.PI/2;
     scene.add(hero.mesh);
     hero.nod();
 }
 
+let monster;
 function createMonster() {
 
     monster = new Monster();
@@ -1081,7 +1084,7 @@ function replay(){
 
 }
 
-Fir = function() {
+function Fir() {
     var height = 200;
     var truncGeom = new THREE.CylinderGeometry(2,2,height, 6,1);
     truncGeom.applyMatrix(new THREE.Matrix4().makeTranslation(0,height/2,0));
@@ -1111,7 +1114,7 @@ function createFirs(){
         floor.add(fir.mesh);
     }
 }
-
+let carrot
 function createCarrot(){
     carrot = new Carrot();
     scene.add(carrot.mesh);
@@ -1145,7 +1148,7 @@ function updateFloorRotation(){
     floorRotation = floorRotation%(Math.PI*2);
     floor.rotation.z = floorRotation;
 }
-
+let obstacle
 function createObstacle(){
     obstacle = new Hedgehog();
     obstacle.body.rotation.y = -Math.PI/2;
@@ -1154,7 +1157,7 @@ function createObstacle(){
     obstacle.nod();
     scene.add(obstacle.mesh);
 }
-
+let bonusParticles
 function createBonusParticles(){
     bonusParticles = new BonusParticles();
     bonusParticles.mesh.visible = false;
@@ -1238,14 +1241,9 @@ function loop(){
         checkCollision();
     }
 
-    render();
+    renderer.render(scene, camera);
     requestAnimationFrame(loop);
 }
-
-function render(){
-    renderer.render(scene, camera);
-}
-
 
 function resetGame(){
     scene.add(hero.mesh);
@@ -1281,15 +1279,14 @@ function initUI(){
 ////////////////////////////////////////////////
 
 // TREE
-
-Tree = function(){
+function Tree(){
     this.mesh = new THREE.Object3D();
     this.trunc = new Trunc();
     this.mesh.add(this.trunc.mesh);
 }
 
 
-Trunc = function(){
+function Trunc(){
     var truncHeight = 50 + Math.random()*150;
     var topRadius = 1+Math.random()*5;
     var bottomRadius = 5+Math.random()*5;

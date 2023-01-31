@@ -4,15 +4,15 @@ import commonjs from '@rollup/plugin-commonjs';
 
 const DIR_DIST = "dist/animate-canvas-lib"
 
-const outputConfigs = {
-	'esm-bundler': {
-		file: 
-	}
-}
+// const outputConfigs = {
+// 	'esm-bundler': {
+// 		file: 
+// 	}
+// }
 // const defalutFormats
 // const packageConfigs = 
 export default {
-	input: './src/plane.js',
+	input: './src/rabbit.js',
 	plugins:[
 		resolve(), // so Rollup can find `ms`
 		commonjs(), // so Rollup can convert `ms` to an ES module
@@ -25,7 +25,7 @@ export default {
 
 	output: [
 		{
-			name: 'plane',
+			name: '__animation__',
 			file: DIR_DIST + ".umd.js",
 			format: 'umd',
 			paths: {
