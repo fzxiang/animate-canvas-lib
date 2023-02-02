@@ -2,12 +2,8 @@
   "name": "animate-canvas-lib",
   "version": "0.0.2",
   "description": "收集优秀的canvas动画库",
-  "main": "dist/animate-canvas-lib.cjs.js",
-  "module": "dist/animate-canvas-lib.esm.js",
-  "browser": "dist/animate-canvas-lib.umd.js",
   "scripts": {
-    "serve": "serve -p 5100",
-    "open": "open http://localhost:5100/demo/demo.html",
+    "serve": "open http://localhost:5100/demo/ && serve -p 5100",
     "build": "rollup --config",
     "release": "node scripts/release.js --dry true ",
     "dev": "rollup --config --watch",
@@ -16,10 +12,12 @@
     "format": "prettier --write --parser typescript \"src/**/*.ts?(x)\""
   },
   "dependencies": {
+    "gsap": "^1.19.1",
     "three": "^0.86.0"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^11.0.1",
+    "@rollup/plugin-multi-entry": "^6.0.0",
     "@rollup/plugin-node-resolve": "^7.0.0",
     "brotli": "^1.3.2",
     "chalk": "^4.1.0",

@@ -1,5 +1,6 @@
 //THREEJS RELATED VARIABLES
 import THREE from 'three';
+import TweenMax from 'gsap/src/uncompressed/TweenMax.js'
 
 var scene,
     camera, fieldOfView, aspectRatio, nearPlane, farPlane,
@@ -156,9 +157,13 @@ function handleWindowResize() {
 
 
 function handleMouseDown(event){
-    if (gameStatus == "play") hero.jump();
+    if (gameStatus == "play") { 
+        hero.jump(); 
+    }
     else if (gameStatus == "readyToReplay"){
         replay();
+    } else if(gameStatus == "gameover"){
+        gameStatus = "readyToReplay"
     }
 }
 
@@ -1027,12 +1032,12 @@ function updateMonsterPosition(){
 }
 
 function gameOver(){
-    fieldGameOver.className = "show";
+    // fieldGameOver.className = "show";
     gameStatus = "gameOver";
     monster.sit();
     hero.hang();
     monster.heroHolder.add(hero.mesh);
-    TweenMax.to(this, 1, {speed:0});
+    TweenMax.to(window, 1, {speed:0});
     TweenMax.to(camera.position, 3, {z:cameraPosGameOver, y: 60, x:-30});
     carrot.mesh.visible = false;
     obstacle.mesh.visible = false;
@@ -1043,7 +1048,7 @@ function replay(){
 
     gameStatus = "preparingToReplay"
 
-    fieldGameOver.className = "";
+    // fieldGameOver.className = "";
 
     TweenMax.killTweensOf(monster.pawFL.position);
     TweenMax.killTweensOf(monster.pawFR.position);
@@ -1208,7 +1213,7 @@ function getMalus(){
         }});
     //
     monsterPosTarget -= .04;
-    TweenMax.from(this, .5, {malusClearAlpha:.5, onUpdate:function(){
+    TweenMax.from(window, .5, {malusClearAlpha:.5, onUpdate:function(){
             renderer.setClearColor(malusClearColor, malusClearAlpha );
         }})
 }
@@ -1216,7 +1221,7 @@ function getMalus(){
 function updateDistance(){
     distance += delta*speed;
     var d = distance/2;
-    fieldDistance.innerHTML = Math.floor(d);
+    // fieldDistance.innerHTML = Math.floor(d);
 }
 
 function updateLevel(){
@@ -1267,8 +1272,8 @@ function resetGame(){
 }
 
 function initUI(){
-    fieldDistance = document.getElementById("distValue");
-    fieldGameOver = document.getElementById("gameoverInstructions");
+    // fieldDistance = document.getElementById("distValue");
+    // fieldGameOver = document.getElementById("gameoverInstructions");
 
 }
 
