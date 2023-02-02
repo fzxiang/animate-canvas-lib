@@ -1,228 +1,252 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
+import TWEEN from '@tweenjs/tween.js'
+import setupOrbitControls from '../lib/three-OrbitControls.js';
+// import OrbitControls from 'three-orbitcontrols'
+// import * as OrbitControls from 'three/examples/js/controls/OrbitControls'
 
-var OutlineShader = {
+let OutlineShader, renderer, camera, controls, scene
+function createScene(container) {
+  OutlineShader = {
 
-  uniforms: {
-      offset: { type: 'f', value: 0.3 },
-      color: { type: 'v3', value: new THREE.Color('#000000') },
-      alpha: { type: 'f', value: 1.0 }
-  },
+    uniforms: {
+        offset: { type: 'f', value: 0.3 },
+        color: { type: 'v3', value: new THREE.Color('#000000') },
+        alpha: { type: 'f', value: 1.0 }
+    },
+  
+    vertexShader: [
+  
+        "uniform float offset;",
+  
+        "void main() {",
+        "  vec4 pos = modelViewMatrix * vec4( position + normal * offset, 1.0 );",
+        "  gl_Position = projectionMatrix * pos;",
+        "}"
+  
+    ].join('\n'),
+  
+    fragmentShader: [
+  
+        "uniform vec3 color;",
+        "uniform float alpha;",
+  
+        "void main() {",
+        "  gl_FragColor = vec4( color, alpha );",
+        "}"
+  
+    ].join('\n')
+  
+  };
+  renderer = new THREE.WebGLRenderer( { antialias: true } );
+  renderer.setPixelRatio( window.devicePixelRatio );
+  renderer.setSize( window.innerWidth, window.innerHeight );
+  container.appendChild( renderer.domElement );
+  renderer.domElement.style.cursor = 'pointer';
 
-  vertexShader: [
+  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
+  camera.position.set( 0, -6, 3 );
 
-      "uniform float offset;",
 
-      "void main() {",
-      "  vec4 pos = modelViewMatrix * vec4( position + normal * offset, 1.0 );",
-      "  gl_Position = projectionMatrix * pos;",
-      "}"
+  controls = new OrbitControls( camera, renderer.domElement );
+  controls.target.y = 1;
+  controls.enableDamping = true;
+  controls.enabled = false;
 
-  ].join('\n'),
 
-  fragmentShader: [
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color( 0x01374b );
+  scene.fog = new THREE.Fog( scene.background, 10, 20 );
 
-      "uniform vec3 color;",
-      "uniform float alpha;",
-
-      "void main() {",
-      "  gl_FragColor = vec4( color, alpha );",
-      "}"
-
-  ].join('\n')
-
-};
-
-var container = document.getElementById( 'rocket' );
-
-var renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
-container.appendChild( renderer.domElement );
-renderer.domElement.style.cursor = 'pointer';
-
-var camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
-camera.position.set( 0, -6, 3 );
-
-var controls = new THREE.OrbitControls( camera, renderer.domElement );
-controls.target.y = 1;
-controls.enableDamping = true;
-controls.enabled = false;
-
-var scene = new THREE.Scene();
-scene.background = new THREE.Color( 0x01374b );
-scene.fog = new THREE.Fog( scene.background, 10, 20 );
-
+}
+// -------------------------------------------
 // lights
-var aLight = new THREE.AmbientLight( 0x555555 );
-scene.add( aLight );
+let aLight, dLight1
+function createLights() {
+  aLight = new THREE.AmbientLight( 0x555555 );
+  scene.add( aLight );
 
-var dLight1 = new THREE.DirectionalLight( 0xffffff, 0.4 );
-dLight1.position.set( 0.7, 1, 1 );
-scene.add( dLight1 );
+  dLight1 = new THREE.DirectionalLight( 0xffffff, 0.4 );
+  dLight1.position.set( 0.7, 1, 1 );
+  scene.add( dLight1 );
 
-// var dlh1 = new THREE.DirectionalLightHelper( dLight1, 0.5 );
-// scene.add( dlh1 );
+  // var dlh1 = new THREE.DirectionalLightHelper( dLight1, 0.5 );
+  // scene.add( dlh1 );
 
-// var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
-// scene.add( gh );
+  // var gh = new THREE.GridHelper( 2, 10, 0x000000, 0x808080 );
+  // scene.add( gh );
 
-// -------------------------------------------
-
-var rocketGroup = new THREE.Group();
-scene.add( rocketGroup );
-
-var rocket = new THREE.Group();
-rocket.position.y = -1.5; // vertically center
-rocketGroup.add( rocket );
-
-// -------------------------------------------
-
-// body
-
-var points = [];
-
-points.push( new THREE.Vector2( 0, 0 ) ); // bottom
-
-for ( var i = 0; i < 11; i ++ ) {
-  var point = new THREE.Vector2(
-      Math.cos( i * 0.227 - 0.75 ) * 8,
-      i * 4.0
-  );
-
-  points.push( point );
 }
 
-points.push( new THREE.Vector2( 0, 40 ) ); // tip
+// -------------------------------------------
+// group
+let rocketGroup, rocket
+function createRocket() {
+  rocketGroup = new THREE.Group();
+  scene.add( rocketGroup );
+  
+  rocket = new THREE.Group();
+  rocket.position.y = -1.5; // vertically center
+  rocketGroup.add( rocket );
+}
 
-var rocketGeo = new THREE.LatheGeometry( points, 32 );
 
-var rocketMat = new THREE.MeshToonMaterial({
-  color: 0xcccccc,
-  shininess: 1
-});
+// -------------------------------------------
+// body background
 
-var rocketOutlineMat = new THREE.ShaderMaterial({
-  uniforms: THREE.UniformsUtils.clone( OutlineShader.uniforms ),
-  vertexShader: OutlineShader.vertexShader,
-  fragmentShader: OutlineShader.fragmentShader,
-  side: THREE.BackSide,
-});
+var points = [];
+let rocketOutlineMat
+function creatBody (){
+  points.push( new THREE.Vector2( 0, 0 ) ); // bottom
 
-var rocketObj = THREE.SceneUtils.createMultiMaterialObject(
-  rocketGeo, [ rocketMat, rocketOutlineMat ]
-);
-rocketObj.scale.setScalar( 0.1 );
-rocket.add( rocketObj );
+  for ( var i = 0; i < 11; i ++ ) {
+    var point = new THREE.Vector2(
+        Math.cos( i * 0.227 - 0.75 ) * 8,
+        i * 4.0
+    );
+  
+    points.push( point );
+  }
+  
+  points.push( new THREE.Vector2( 0, 40 ) ); // tip
+  
+  var rocketGeo = new THREE.LatheGeometry( points, 32 );
+  
+  var rocketMat = new THREE.MeshToonMaterial({
+    color: 0xcccccc,
+    shininess: 1
+  });
+  
+  rocketOutlineMat = new THREE.ShaderMaterial({
+    uniforms: THREE.UniformsUtils.clone( OutlineShader.uniforms ),
+    vertexShader: OutlineShader.vertexShader,
+    fragmentShader: OutlineShader.fragmentShader,
+    side: THREE.BackSide,
+  });
+  
+  var rocketObj = THREE.SceneUtils.createMultiMaterialObject(
+    rocketGeo, [ rocketMat, rocketOutlineMat ]
+  );
+  rocketObj.scale.setScalar( 0.1 );
+  rocket.add( rocketObj );
+  // var wireframe = new THREE.WireframeGeometry( rocketGeo );
+  // var line = new THREE.LineSegments( wireframe );
+  // line.material.color.setHex( 0x000000 );
+  // rocketObj.add( line );
+}
 
-// var wireframe = new THREE.WireframeGeometry( rocketGeo );
-// var line = new THREE.LineSegments( wireframe );
-// line.material.color.setHex( 0x000000 );
-// rocketObj.add( line );
+
+
 
 // -------------------------------------------
 
 // window
-
-var portalGeo = new THREE.CylinderBufferGeometry( 0.26, 0.26, 1.6, 32 );
-var portalMat = new THREE.MeshToonMaterial({ color: 0x90dcff });
-var portalOutlineMat = rocketOutlineMat.clone();
-portalOutlineMat.uniforms.offset.value = 0.03;
-var portal = THREE.SceneUtils.createMultiMaterialObject(
-  portalGeo, [ portalMat, portalOutlineMat ]
-);
-portal.position.y = 2;
-portal.rotation.x = Math.PI / 2;
-rocket.add( portal );
+function createWindow() {
+  var portalGeo = new THREE.CylinderBufferGeometry( 0.26, 0.26, 1.6, 32 );
+  var portalMat = new THREE.MeshToonMaterial({ color: 0x90dcff });
+  var portalOutlineMat = rocketOutlineMat.clone();
+  portalOutlineMat.uniforms.offset.value = 0.03;
+  var portal = THREE.SceneUtils.createMultiMaterialObject(
+    portalGeo, [ portalMat, portalOutlineMat ]
+  );
+  portal.position.y = 2;
+  portal.rotation.x = Math.PI / 2;
+  rocket.add( portal );
+  
+}
 
 // ------------
+function createWire() {
+  var circle = new THREE.Shape();
+  circle.absarc( 0, 0, 3.5, 0, Math.PI * 2 );
+  
+  var hole = new THREE.Path();
+  hole.absarc( 0, 0, 3, 0, Math.PI * 2 );
+  circle.holes.push( hole );
+  
+  var tubeExtrudeSettings = {
+    amount: 17,
+    steps: 1,
+    bevelEnabled: false
+  };
+  var tubeGeo = new THREE.ExtrudeGeometry( circle, tubeExtrudeSettings );
+  tubeGeo.computeVertexNormals();
+  tubeGeo.center();
+  var tubeMat = new THREE.MeshToonMaterial({
+    color: 0xff0000,
+    shininess: 1
+  });
+  var tubeOutlineMat = rocketOutlineMat.clone();
+  tubeOutlineMat.uniforms.offset.value = 0.2;
+  var tube = THREE.SceneUtils.createMultiMaterialObject(
+    tubeGeo, [ tubeMat, tubeOutlineMat ]
+  );
+  tube.position.y = 2;
+  tube.scale.setScalar( 0.1 );
+  rocket.add( tube );
+  
+  // var wireframe = new THREE.WireframeGeometry( tubeGeo );
+  // var line = new THREE.LineSegments( wireframe );
+  // line.material.color.setHex( 0x000000 );
+  // tube.add( line );
+}
 
-var circle = new THREE.Shape();
-circle.absarc( 0, 0, 3.5, 0, Math.PI * 2 );
-
-var hole = new THREE.Path();
-hole.absarc( 0, 0, 3, 0, Math.PI * 2 );
-circle.holes.push( hole );
-
-var tubeExtrudeSettings = {
-  amount: 17,
-  steps: 1,
-  bevelEnabled: false
-};
-var tubeGeo = new THREE.ExtrudeGeometry( circle, tubeExtrudeSettings );
-tubeGeo.computeVertexNormals();
-tubeGeo.center();
-var tubeMat = new THREE.MeshToonMaterial({
-  color: 0xff0000,
-  shininess: 1
-});
-var tubeOutlineMat = rocketOutlineMat.clone();
-tubeOutlineMat.uniforms.offset.value = 0.2;
-var tube = THREE.SceneUtils.createMultiMaterialObject(
-  tubeGeo, [ tubeMat, tubeOutlineMat ]
-);
-tube.position.y = 2;
-tube.scale.setScalar( 0.1 );
-rocket.add( tube );
-
-// var wireframe = new THREE.WireframeGeometry( tubeGeo );
-// var line = new THREE.LineSegments( wireframe );
-// line.material.color.setHex( 0x000000 );
-// tube.add( line );
 
 // -------------------------------------------
 
 // wing
+function createWind() {
+  var shape = new THREE.Shape();
 
-var shape = new THREE.Shape();
-
-shape.moveTo( 3, 0 );
-shape.quadraticCurveTo( 25, -8, 15, -37 );
-shape.quadraticCurveTo( 13, -21, 0, -20 );
-shape.lineTo( 3, 0 );
-
-var extrudeSettings = {
-  steps: 1,
-  amount: 4,
-  bevelEnabled: true,
-  bevelThickness: 2,
-  bevelSize: 2,
-  bevelSegments: 5
-};
-
-var wingGroup = new THREE.Group();
-rocket.add( wingGroup );
-
-var wingGeo = new THREE.ExtrudeGeometry( shape, extrudeSettings );
-wingGeo.computeVertexNormals();
-var wingMat = new THREE.MeshToonMaterial({
-  color: 0xff0000,
-  shininess: 1,
-});
-var wingOutlineMat = rocketOutlineMat.clone();
-wingOutlineMat.uniforms.offset.value = 1;
-var wing = THREE.SceneUtils.createMultiMaterialObject(
-  wingGeo, [ wingMat, wingOutlineMat ]
-);
-wing.scale.setScalar( 0.03 );
-wing.position.set( .6, 0.9, 0 );
-wingGroup.add( wing );
-
-// var wireframe = new THREE.WireframeGeometry( wingGeo );
-// var line = new THREE.LineSegments( wireframe );
-// line.material.color.setHex( 0x000000 );
-// wing.add( line );
-
-var wing2 = wingGroup.clone();
-wing2.rotation.y = Math.PI;
-rocket.add( wing2 );
-
-var wing3 = wingGroup.clone();
-wing3.rotation.y = Math.PI / 2;
-rocket.add( wing3 );
-
-var wing4 = wingGroup.clone();
-wing4.rotation.y = - Math.PI / 2;
-rocket.add( wing4 );
+  shape.moveTo( 3, 0 );
+  shape.quadraticCurveTo( 25, -8, 15, -37 );
+  shape.quadraticCurveTo( 13, -21, 0, -20 );
+  shape.lineTo( 3, 0 );
+  
+  var extrudeSettings = {
+    steps: 1,
+    amount: 4,
+    bevelEnabled: true,
+    bevelThickness: 2,
+    bevelSize: 2,
+    bevelSegments: 5
+  };
+  
+  var wingGroup = new THREE.Group();
+  rocket.add( wingGroup );
+  
+  var wingGeo = new THREE.ExtrudeGeometry( shape, extrudeSettings );
+  wingGeo.computeVertexNormals();
+  var wingMat = new THREE.MeshToonMaterial({
+    color: 0xff0000,
+    shininess: 1,
+  });
+  var wingOutlineMat = rocketOutlineMat.clone();
+  wingOutlineMat.uniforms.offset.value = 1;
+  var wing = THREE.SceneUtils.createMultiMaterialObject(
+    wingGeo, [ wingMat, wingOutlineMat ]
+  );
+  wing.scale.setScalar( 0.03 );
+  wing.position.set( .6, 0.9, 0 );
+  wingGroup.add( wing );
+  
+  // var wireframe = new THREE.WireframeGeometry( wingGeo );
+  // var line = new THREE.LineSegments( wireframe );
+  // line.material.color.setHex( 0x000000 );
+  // wing.add( line );
+  
+  var wing2 = wingGroup.clone();
+  wing2.rotation.y = Math.PI;
+  rocket.add( wing2 );
+  
+  var wing3 = wingGroup.clone();
+  wing3.rotation.y = Math.PI / 2;
+  rocket.add( wing3 );
+  
+  var wing4 = wingGroup.clone();
+  wing4.rotation.y = - Math.PI / 2;
+  rocket.add( wing4 );
+  
+}
 
 // -------------------------------------------
 
@@ -340,23 +364,29 @@ Particles.prototype.updateConstant = function(){
   this.points.geometry.verticesNeedUpdate = true;
 }
 
-// orange
-var fire = new Particles({
-  color: 0xff5a00,
-  size: 0.4,
-  rangeH: 0.8,
-  rangeV: 2.5,
-  pointCount: 50
-});
-rocket.add( fire );
+// -------------------------------------------
 
-// yellow
-var fire2 = new Particles({
-  color: 0xffc000,
-  size: 0.6,
-  rangeH: 0.5
-});
-rocket.add( fire2 );
+// fire
+let fire, fire2
+function createFire() {
+  // orange
+  fire = new Particles({
+    color: 0xff5a00,
+    size: 0.4,
+    rangeH: 0.8,
+    rangeV: 2.5,
+    pointCount: 50
+  });
+  // yellow
+  rocket.add( fire );
+  fire2 = new Particles({
+    color: 0xffc000,
+    size: 0.6,
+    rangeH: 0.5
+  });
+  rocket.add( fire2 );
+}
+
 
 // var box = new THREE.BoxHelper( fire.points );
 // fire.add( box );
@@ -364,47 +394,50 @@ rocket.add( fire2 );
 // -------------------------------------------
 
 // stars
-
-var stars = new Particles({
-  color: 0xffffff,
-  size: 0.6,
-  rangeH: 20,
-  rangeV: 20,
-  pointCount: 400,
-  size: 0.2,
-  speed: 0.1
-});
-
-stars.points.position.y = 0;
-scene.add( stars );
+let stars
+function createStars() {
+   stars = new Particles({
+    color: 0xffffff,
+    size: 0.6,
+    rangeH: 20,
+    rangeV: 20,
+    pointCount: 400,
+    size: 0.2,
+    speed: 0.1
+  });
+  
+  stars.points.position.y = 0;
+  scene.add( stars );
+}
 
 // -------------------------------------------
 
 // input
+let plane, rocketTarget, cameraTarget, raycaster, mouse
+function createInit() {
 
-//
-
-var plane = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ), 0 );
-// var helper = new THREE.PlaneHelper( plane, 5, 0xffff00 );
-// scene.add( helper );
-
-var rocketTarget = new THREE.Vector3();
-
-var cameraTarget = new THREE.Vector3();
-cameraTarget.copy( camera.position );
-
-var raycaster = new THREE.Raycaster();
-
-//
-
-var mouse = new THREE.Vector2();
-
-// var targetSphere = new THREE.Mesh(
-// 	new THREE.SphereBufferGeometry( 0.2 ),
-// 	new THREE.MeshPhongMaterial({ color: 0x00ff00 })
-// );
-
-// scene.add( targetSphere );
+  plane = new THREE.Plane( new THREE.Vector3( 0, 0, 1 ), 0 );
+  // var helper = new THREE.PlaneHelper( plane, 5, 0xffff00 );
+  // scene.add( helper );
+  
+  rocketTarget = new THREE.Vector3();
+  
+  cameraTarget = new THREE.Vector3();
+  cameraTarget.copy( camera.position );
+  
+  raycaster = new THREE.Raycaster();
+  
+  //
+  
+  mouse = new THREE.Vector2();
+  
+  // var targetSphere = new THREE.Mesh(
+  // 	new THREE.SphereBufferGeometry( 0.2 ),
+  // 	new THREE.MeshPhongMaterial({ color: 0x00ff00 })
+  // );
+  
+  // scene.add( targetSphere );
+}
 
 function mousemove(e){
   mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
@@ -461,13 +494,7 @@ function mouseup(e){
   renderer.domElement.style.cursor = 'pointer';
 }
 
-renderer.domElement.addEventListener('mousemove', mousemove, false);
-renderer.domElement.addEventListener('mousedown', mousedown, false);
-renderer.domElement.addEventListener('mouseup', mouseup, false);
-
 // -------------------------------------------
-
-window.addEventListener( 'resize', resize, false );
 
 function resize() {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -475,12 +502,7 @@ function resize() {
   renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
-var clock = new THREE.Clock();
-var time = 0;
-var angle = THREE.Math.degToRad( 3 );
-
-loop();
-
+var clock, time , angle 
 function loop() {
   requestAnimationFrame( loop );
   TWEEN.update();
@@ -514,4 +536,30 @@ function lerp( object, prop, destination ) {
           object[prop] = destination;
       }
   }
+}
+
+export async function render({element}) {
+  await setupOrbitControls(THREE)
+  createScene(element);
+  createLights();
+  createRocket();
+  creatBody();
+  createWindow();
+  createWire();
+  createWind();
+  createFire();
+  createStars();
+  createInit()
+
+  renderer.domElement.addEventListener('mousemove', mousemove, false);
+  renderer.domElement.addEventListener('mousedown', mousedown, false);
+  renderer.domElement.addEventListener('mouseup', mouseup, false);
+  window.addEventListener( 'resize', resize, false );
+
+  // document.addEventListener('mousemove', handleMouseMove, false);
+
+  clock = new THREE.Clock();
+  time = 0;
+  angle = THREE.Math.degToRad( 3 );
+  loop();
 }

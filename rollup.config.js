@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import path from 'path'
 import glob from 'glob';
 import { fileURLToPath } from 'url';
+import { terser } from 'rollup-plugin-terser';
 
 // import typescript from "@rollup/plugin-typescript";
 
@@ -23,25 +24,27 @@ const mods = glob.sync('./src/**/*.js').map(file => [
 const config = mods.map(([modName, modPath]) => {
 	return {
 		input: modPath,
-		external: ['three'],
-		globals: {
-			three: 'THREE',
-		},
+		// external: ['three'],
+		// globals: {
+		// 	three: 'THREE',
+		// },
 		plugins: [
 			resolve(), // so Rollup can find `ms`
 			commonjs(), // so Rollup can convert `ms` to an ES module
+			// terser(),
 		],
-		output: ['umd', 'es', 'cjs'].map(mod => {
+		output: ['umd'].map(mod => {
 			return {
 				name: '__animation__',
 				dir: DIR_DIST,
 				format: mod,
 				paths: {
-					three: 'https://cdn.jsdelivr.net/npm/three@0.86.0/build/three.min.js',
+					three: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/three.js/86/three.min.js',
 				},
 				entryFileNames: `[name].${mod}.js`,
 			}
-		})
+		}),
+		
 	}
 })
 export default config

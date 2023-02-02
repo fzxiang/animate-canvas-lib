@@ -1,5 +1,5 @@
 //THREEJS RELATED VARIABLES
-import THREE from 'three';
+import * as THREE from 'three';
 import TweenMax from 'gsap/src/uncompressed/TweenMax.js'
 
 var scene,

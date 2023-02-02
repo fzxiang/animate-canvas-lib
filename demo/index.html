@@ -4,10 +4,9 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="./three.js"></script>
-  <!-- <script src="https://requirejs.org/docs/release/2.3.6/minified/require.js"></script> -->
-  <script src="/dist/rabbit.umd.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.19.1/TweenMax.min.js"> </script> -->
+  <!-- <script src="./three.js" defer></script> -->
+  <!-- <script src="./abc.js" defer></script> -->
+  <script src="/dist/rocket.umd.js" defer></script>
 
   <title>Demo</title>
 </head>
@@ -23,9 +22,12 @@
 <body>
   <div id="plane" style="display:inline-block;"></div>
   <script>
-     __animation__.render({
+    setTimeout(() => {
+      __animation__.render({
         element: document.getElementById('plane')
       })
+    }, 2000)
+  
   </script>
 </body>
 </html>
