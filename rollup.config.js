@@ -31,7 +31,6 @@ const config = mods.map(([modName, modPath]) => {
 		plugins: [
 			resolve(), // so Rollup can find `ms`
 			commonjs(), // so Rollup can convert `ms` to an ES module
-			// terser(),
 		],
 		output: ['umd'].map(mod => {
 			return {
@@ -47,4 +46,33 @@ const config = mods.map(([modName, modPath]) => {
 		
 	}
 })
-export default config
+
+
+// min build
+const minConfig = mods.map(([modName, modPath]) => {
+	return {
+		input: modPath,
+		// external: ['three'],
+		// globals: {
+		// 	three: 'THREE',
+		// },
+		plugins: [
+			resolve(), // so Rollup can find `ms`
+			commonjs(), // so Rollup can convert `ms` to an ES module
+			terser()
+		],
+		output: ['umd'].map(mod => {
+			return {
+				name: '__animation__',
+				dir: DIR_DIST,
+				format: mod,
+				paths: {
+					three: 'https://lf3-cdn-tos.bytecdntp.com/cdn/expire-1-y/three.js/86/three.min.js',
+				},
+				entryFileNames: `[name].min.js`,
+			}
+		}),
+		
+	}
+})
+export default config.concat(minConfig)
