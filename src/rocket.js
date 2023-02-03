@@ -1,8 +1,10 @@
 import * as THREE from 'three'
 import TWEEN from '@tweenjs/tween.js'
-import setupOrbitControls from '../lib/three-OrbitControls.js';
+import { OrbitControls, setupOrbitControls } from '../lib/three-OrbitControls.js';
 // import OrbitControls from 'three-orbitcontrols'
 // import * as OrbitControls from 'three/examples/js/controls/OrbitControls'
+
+setupOrbitControls(THREE)
 
 let OutlineShader, renderer, camera, controls, scene
 function createScene(container) {
@@ -539,7 +541,6 @@ function lerp( object, prop, destination ) {
 }
 
 export async function render({element}) {
-  await setupOrbitControls(THREE)
   createScene(element);
   createLights();
   createRocket();
