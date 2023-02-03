@@ -93,8 +93,8 @@ var PI = Math.PI;
 function initScreenAnd3D(element) {
     container = element
 
-    HEIGHT = window.innerHeight;
-    WIDTH = window.innerWidth;
+    HEIGHT = container.clientHeight;
+    WIDTH = container.clientWidth;
     windowHalfX = WIDTH / 2;
     windowHalfY = HEIGHT / 2;
 
@@ -146,8 +146,8 @@ function initScreenAnd3D(element) {
 }
 
 function handleWindowResize() {
-    HEIGHT = window.innerHeight;
-    WIDTH = window.innerWidth;
+    HEIGHT = container.clientHeight;
+    WIDTH = container.clientWidth;
     windowHalfX = WIDTH / 2;
     windowHalfY = HEIGHT / 2;
     renderer.setSize(WIDTH, HEIGHT);

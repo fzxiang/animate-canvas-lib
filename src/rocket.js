@@ -6,8 +6,9 @@ import { OrbitControls, setupOrbitControls } from '../lib/three-OrbitControls.js
 
 setupOrbitControls(THREE)
 
-let OutlineShader, renderer, camera, controls, scene
-function createScene(container) {
+let OutlineShader, renderer, camera, controls, scene, container
+function createScene(element) {
+  container = element
   OutlineShader = {
 
     uniforms: {
@@ -41,11 +42,11 @@ function createScene(container) {
   };
   renderer = new THREE.WebGLRenderer( { antialias: true } );
   renderer.setPixelRatio( window.devicePixelRatio );
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( container.clientWidth, container.clientHeight );
   container.appendChild( renderer.domElement );
   renderer.domElement.style.cursor = 'pointer';
 
-  camera = new THREE.PerspectiveCamera( 60, window.innerWidth / window.innerHeight, .1, 100000 );
+  camera = new THREE.PerspectiveCamera( 60, container.clientWidth / container.clientHeight, .1, 100000 );
   camera.position.set( 0, -6, 3 );
 
 
@@ -442,8 +443,8 @@ function createInit() {
 }
 
 function mousemove(e){
-  mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-  mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+  mouse.x = ( e.clientX / container.clientWidth ) * 2 - 1;
+  mouse.y = - ( e.clientY / container.clientHeight ) * 2 + 1;
 
   cameraTarget.x = - mouse.x * 1;
   cameraTarget.z = 3 + mouse.y * 1;
@@ -499,9 +500,9 @@ function mouseup(e){
 // -------------------------------------------
 
 function resize() {
-  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.aspect = container.clientWidth / container.clientHeight;
   camera.updateProjectionMatrix();
-  renderer.setSize( window.innerWidth, window.innerHeight );
+  renderer.setSize( container.clientWidth, container.clientHeight );
 }
 
 var clock, time , angle 

@@ -20,8 +20,8 @@ function createScene(element) {
   // and use them to setup the aspect ratio
   // of the camera and the size of the renderer.
   container = element
-  HEIGHT = window.innerHeight;
-  WIDTH = window.innerWidth;
+  HEIGHT = container.clientHeight;
+  WIDTH = container.clientWidth;
 
   // Create the scene.
   scene = new THREE.Scene();
@@ -67,8 +67,8 @@ function createScene(element) {
 
 //RESPONSIVE FUNCTION
 function handleWindowResize() {
-  HEIGHT = window.innerHeight;
-  WIDTH = window.innerWidth;
+  HEIGHT = container.clientHeight;
+  WIDTH = container.clientWidth;
   renderer.setSize(WIDTH, HEIGHT);
   camera.aspect = WIDTH / HEIGHT;
   camera.updateProjectionMatrix();

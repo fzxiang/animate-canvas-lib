@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="/dist/rocket.umd.js" defer></script>
+  <script src="/dist/plane.umd.js" defer></script>
 
   <title>Demo</title>
 </head>
@@ -18,13 +18,11 @@
   }
 </style>
 <body>
-  <div id="plane" style="display:inline-block;"></div>
+  <div id="plane" style="height: 500px; overflow: hidden;"></div>
   <script>
-    setTimeout(() => {
       __animation__.render({
         element: document.getElementById('plane')
       })
-    }, 2000)
   
   </script>
 </body>
